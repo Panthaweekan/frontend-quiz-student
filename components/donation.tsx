@@ -1,51 +1,41 @@
-// import { API_URL } from "../utils/api";
-// import { type Donation } from "@/utils/types";
-import { Paper, Text, Stack, Group, Title, Card } from "@mantine/core";
-import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { API_URL } from "@/utils/api";
 
-export default function Donation() {
+interface Donation {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  amount: number;
+  time: string;
+}
+
+export default function DonationList() {
+  const [donations, setDonations] = useState<Donation[]>([]);
+
+  useEffect(() => {
+    // Fetch donation data from the API
+    fetch(API_URL)
+      .then((response) => response.json())
+      .then((data: Donation[]) => {
+        setDonations(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching donation data:", error);
+      });
+  }, []);
+
   return (
-    <Card withBorder shadow="xs" bg="gray.3">
-      <Group mb={20}>
-        <Title order={1} color="gray">
-          Total
-        </Title>
-        <Title order={1} variant="gradient">
-          10000
-        </Title>
-        <Title order={1} color="gray">
-          THB
-        </Title>
-      </Group>
-      <Stack>
-        <Paper shadow="xs" p="md">
-          <Group>
-            <Text>Tom</Text>
-            <Text>Sawyer</Text>
-            <Text>tom_sawyer@gmail.com</Text>
-            <Text>10000</Text>
-            <Text>{dayjs("2023-08-26 06:17:51").format("D-MMM HH:mm:ss")}</Text>
-          </Group>
-        </Paper>
-        <Paper shadow="xs" p="md">
-          <Group>
-            <Text>Tom</Text>
-            <Text>Sawyer</Text>
-            <Text>tom_sawyer@gmail.com</Text>
-            <Text>10000</Text>
-            <Text>{dayjs("2023-08-26 06:17:51").format("D-MMM HH:mm:ss")}</Text>
-          </Group>
-        </Paper>
-        <Paper shadow="xs" p="md">
-          <Group>
-            <Text>Tom</Text>
-            <Text>Sawyer</Text>
-            <Text>tom_sawyer@gmail.com</Text>
-            <Text>10000</Text>
-            <Text>{dayjs("2023-08-26 06:17:51").format("D-MMM HH:mm:ss")}</Text>
-          </Group>
-        </Paper>
-      </Stack>
-    </Card>
+    <div>
+      <h1>Donation List</h1>
+      <ul>
+        {donations.map((donation) => (
+          <li key={donation.id}>
+            {donation.firstName} {donation.lastName} - Amount: {donation.amount}{" "}
+            THB
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
